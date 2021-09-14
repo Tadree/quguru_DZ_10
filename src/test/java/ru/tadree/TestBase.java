@@ -2,6 +2,7 @@ package ru.tadree;
 
 import com.codeborne.selenide.Configuration;
 import com.codeborne.selenide.logevents.SelenideLogger;
+import config.Credentials;
 import io.qameta.allure.selenide.AllureSelenide;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
@@ -13,6 +14,8 @@ import static java.lang.String.format;
 public class TestBase {
     @BeforeAll
     static void setup() {
+        String login = Credentials.credentials.login();
+        String password = Credentials.credentials.password();
         SelenideLogger.addListener("AllureSelenide", new AllureSelenide());
 
         DesiredCapabilities capabilities = new DesiredCapabilities();
@@ -21,8 +24,7 @@ public class TestBase {
 
         Configuration.browserCapabilities = capabilities;
         Configuration.startMaximized = true;
-        //Configuration.remote = "https://user1:1234@selenoid.autotests.cloud/wd/hub/";
-        Configuration.remote = format("https://user1:1234@" + System.getProperty("url"));
+        Configuration.remote = format("https://%s:%s@" + System.getProperty("url"), login, password);
     }
 
     @AfterEach
